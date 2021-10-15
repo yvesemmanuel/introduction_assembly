@@ -14,11 +14,11 @@
 		
 		
 	StoreB:
-		addi $s0, $t1, 0
+		addi $a0, $t1, 0
 		j Exit
 	
 	StoreA:
-		addi $s0, $t0, 0
+		addi $a0, $t0, 0
 		j Exit
 	
 	If:	# if a < b -> b -= a

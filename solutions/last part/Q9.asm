@@ -1,36 +1,36 @@
 .data
 	enterA: .asciiz "a = "
 	enterB: .asciiz "b = "
-	outputSum: .ascii "a + b = "
+	outputSum: .ascii "Sum([a, b])="
 	a: .word 0
 	b: .word 0
 	sum: .word 0
 .text
-	# input a message
+	# input message
 	li $v0, 4
 	la $a0, enterA
 	syscall
-	# input a
+	# input 'a'
 	li $v0, 5
 	syscall
-	# store a value into variable a
+	# storing value into variable 'a'
 	sw $v0, a
 	
-	# input b message
+	# input message
 	li $v0, 4
 	la $a0, enterB
 	syscall
-	# input b
+	# input 'b'
 	li $v0, 5
 	syscall
-	# store b value into variable b
+	# storing value into variable 'b'
 	sw $v0, b
 	
-	lw $a0, a # storing a into $a0
-	lw $a1, b # storing b into $a1
+	lw $a0, a # storing 'a' into $a0
+	lw $a1, b # storing 'b' into $a1
 	
-	# check a <= b conditon
-	slt $t0, $a1, $a0 # $t0 = b < a
+	# check a <= b
+	slt $t0, $a1, $a0 # $t0 = a > b
 	bne $t0, $zero, return1 # if a > b -> return1
 	
 	# if a <= b, make the sum
@@ -47,16 +47,17 @@
 	syscall
 	
 	# end of the program
-	jal Exit
+	j Exit
 		
-
+	# functions implementations right below this line
+	
 findSum:
 	addi $sp, $sp, -8 # allocating 2 registers to the stack
-	sw $ra, 0($sp) # the first is the return address
-	sw $s0, 4($sp) # the second is the 'a' value
+	sw $ra, 0($sp) # the first store the return address
+	sw $s0, 4($sp) # the second stores 'a' value
 	
 	# base case
-	move $v0, $a1 # $v0 = $a1 = b
+	move $v0, $a1 # $v0 = $a1 = a == b
 	beq $a0, $a1, sumDone # if a == b, return b
 	
 	# findSum(a + 1, b) and recurse
@@ -76,7 +77,6 @@ return1: # if a > b, store 1 at $v1 and kill the program
 	li $v1, 1	
 	jal Exit
 
-Exit:
-	# kill the program
+Exit:	# kill the program
 	li $v0, 10
 	syscall
